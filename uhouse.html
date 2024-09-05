@@ -7,17 +7,24 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             margin: 0;
+            padding: 20px;
             background-color: #f0f0f0;
         }
-        .cover-image {
-            width: 80%;
-            max-width: 300px;
+        h1 {
+            text-align: center;
+        }
+        .thumbnail-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .thumbnail {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
             cursor: pointer;
         }
         .admin-icon {
@@ -31,17 +38,39 @@
 </head>
 <body>
     <h1>UHouse - 우리 가족 월간지</h1>
-    <img src="cover.jpg" alt="이번 달 표지" class="cover-image" onclick="location.href='viewer.html'">
-    <div class="admin-icon" onclick="checkAdminPassword()">⚙️</div>
+    <div id="thumbnailContainer" class="thumbnail-container"></div>
+    <div class="admin-icon" onclick="location.href='admin.html'">⚙️</div>
     <script>
-        function checkAdminPassword() {
-            const password = prompt("관리자 비밀번호를 입력하세요:");
-            if (password === "0113") {
-                location.href = 'admin.html';
+        const REPO_OWNER = 'stopoon';
+        const REPO_NAME = 'stopoon.github.io';
+
+        async function loadThumbnails() {
+            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/images`;
+            const response = await fetch(url);
+
+            if (response.ok) {
+                const files = await response.json();
+                const container = document.getElementById('thumbnailContainer');
+                
+                files.sort((a, b) => b.name.localeCompare(a.name)).slice(0, 9).forEach(file => {
+                    const img = document.createElement('img');
+                    img.src = file.download_url;
+                    img.alt = file.name.replace('.jpg', '');
+                    img.className = 'thumbnail';
+                    img.onclick = () => openViewer(file.name);
+                    container.appendChild(img);
+                });
             } else {
-                alert("비밀번호가 올바르지 않습니다.");
+                console.error('Failed to fetch image list');
             }
         }
+
+        function openViewer(filename) {
+            // 뷰어 페이지로 이동하는 코드를 여기에 추가
+            console.log(`Opening viewer for ${filename}`);
+        }
+
+        window.onload = loadThumbnails;
     </script>
 </body>
 </html>
