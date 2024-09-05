@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소식지 관리</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        .newsletter-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .newsletter-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        .add-button {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .add-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>소식지 관리</h1>
+        <div id="newsletterList">
+            <!-- 소식지 목록이 여기에 동적으로 추가됩니다 -->
+        </div>
+        <a href="admin-newsletter-edit.html" class="add-button">새 소식지 추가</a>
+    </div>
+    <script>
+        // 소식지 목록을 가져오는 함수 (예시)
+        function fetchNewsletters() {
+            // 실제로는 서버에서 데이터를 가져와야 합니다.
+            const newsletters = [
+                { id: 1, year: 2024, month: 8, thumbnail: 'https://via.placeholder.com/50' },
+                { id: 2, year: 2024, month: 7, thumbnail: 'https://via.placeholder.com/50' },
+                { id: 3, year: 2024, month: 6, thumbnail: 'https://via.placeholder.com/50' },
+                { id: 4, year: 2023, month: 12, thumbnail: 'https://via.placeholder.com/50' },
+            ];
+
+            const listElement = document.getElementById('newsletterList');
+            let currentYear = null;
+
+            newsletters.forEach(newsletter => {
+                if (newsletter.year !== currentYear) {
+                    currentYear = newsletter.year;
+                    const yearHeader = document.createElement('h2');
+                    yearHeader.textContent = `${currentYear}년`;
+                    listElement.appendChild(yearHeader);
+                }
+
+                const li = document.createElement('div');
+                li.className = 'newsletter-item';
+                li.innerHTML = `
+                    <img src="${newsletter.thumbnail}" alt="${newsletter.year}년 ${newsletter.month}월 소식지">
+                    <span>${newsletter.year}년 ${newsletter.month}월 소식지</span>
+                    <a href="admin-newsletter-edit.html?id=${newsletter.id}">편집</a>
+                `;
+                listElement.appendChild(li);
+            });
+        }
+
+        // 페이지 로드 시 소식지 목록 가져오기
+        fetchNewsletters();
+    </script>
+</body>
+</html>
