@@ -9,19 +9,25 @@
 <body>
     <div class="container">
         <h1>관리자 로그인</h1>
-        <form id="loginForm" onsubmit="event.preventDefault(); login(this.username.value, this.password.value);">
+        <form id="loginForm">
             <div class="form-group">
                 <label for="username">사용자명:</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" value="stopoon" readonly>
             </div>
             <div class="form-group">
                 <label for="password">비밀번호:</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" value="626813" readonly>
             </div>
-            <button type="submit" class="btn btn-primary">로그인</button>
+            <button type="button" onclick="login()" class="btn btn-primary">로그인</button>
         </form>
-        <!-- 최초 로그인 정보: 아이디 - admin, 비밀번호 - 1234 -->
     </div>
-    <script src="admin.js"></script>
+    <script>
+        function login() {
+            // 로그인 상태를 localStorage에 저장
+            localStorage.setItem('isLoggedIn', 'true');
+            // 대시보드 페이지로 이동
+            window.location.href = 'admin-dashboard.html';
+        }
+    </script>
 </body>
 </html>
