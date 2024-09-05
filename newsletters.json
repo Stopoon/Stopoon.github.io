@@ -1,10 +1,47 @@
 {
   "newsletters": [
-    { "month": 8, "year": 2024, "thumbnail": "202408thumb" },
-    { "month": 7, "year": 2024, "thumbnail": "202408thumb" },
-    { "month": 6, "year": 2024, "thumbnail": "https://via.placeholder.com/300x400" },
-    { "month": 5, "year": 2024, "thumbnail": "https://via.placeholder.com/300x400" },
-    { "month": 4, "year": 2024, "thumbnail": "https://via.placeholder.com/300x400" },
-    { "month": 3, "year": 2024, "thumbnail": "https://via.placeholder.com/300x400" }
+    {
+      "month": 8,
+      "year": 2024,
+      "thumbnail": "august-2024-thumbnail.jpg",
+      "pages": [
+        "august-2024-page1.jpg",
+        "august-2024-page2.jpg",
+        "august-2024-page3.jpg"
+      ]
+    },
+    {
+      "month": 7,
+      "year": 2024,
+      "thumbnail": "202408thumb.jpg",
+      "pages": [
+        "IMG_0662.JPG",
+        "IMG_0663.JPG",
+        "IMG_0664.JPG"
+        "IMG_0665.JPG",
+        "IMG_0666.JPG",
+        "IMG_0680.JPG"
+      ]
+    },
+    {
+      "month": 6,
+      "year": 2024,
+      "thumbnail": "june-2024-thumbnail.jpg",
+      "pages": [
+        "june-2024-page1.jpg",
+        "june-2024-page2.jpg",
+        "june-2024-page3.jpg"
+      ]
+    },
+    {
+      "month": 5,
+      "year": 2024,
+      "thumbnail": "may-2024-thumbnail.jpg",
+      "pages": [
+        "may-2024-page1.jpg",
+        "may-2024-page2.jpg",
+        "may-2024-page3.jpg"
+      ]
+    }
   ]
 }
