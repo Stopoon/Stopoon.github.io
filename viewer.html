@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UHouse - 잡지 뷰어</title>
+    <title>UHouse 월간 소식지</title>
     <style>
-        /* 이전 스타일 유지 */
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .thumbnail {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .thumbnail img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
-    <div class="viewer">
-        <img id="pageImage" src="family-newspaper-january-2023.jpg" alt="잡지 페이지" class="page-image">
+    <h1>UHouse 월간 소식지</h1>
+    
+    <div id="thumbnailGrid" class="thumbnail-grid">
+        <div class="thumbnail">
+            <a href="viewer.html?page=202408">
+                <img src="202408thumb.JPG" alt="8월 소식">
+                <p>8월 소식: 여름 특집</p>
+            </a>
+        </div>
+        <!-- 다른 월 소식도 비슷한 형식으로 추가할 수 있습니다 -->
     </div>
-    <div class="controls">
-        <button onclick="changePage(-1)">이전</button>
-        <button onclick="location.href='uhouse.html'">홈으로</button>
-        <button onclick="changePage(1)">다음</button>
-    </div>
-    <script>
-        const pages = [
-            'family-newspaper-january-2023.jpg',
-            'family-newspaper-february-2023.jpg',
-            'family-newspaper-march-2023.jpg',
-            // 추가 이미지 파일명을 여기에 나열
-        ];
-        let currentPage = 0;
-
-        function changePage(direction) {
-            currentPage += direction;
-            if (currentPage < 0) currentPage = pages.length - 1;
-            if (currentPage >= pages.length) currentPage = 0;
-            document.getElementById('pageImage').src = pages[currentPage];
-        }
-    </script>
 </body>
 </html>
