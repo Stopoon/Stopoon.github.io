@@ -24,10 +24,9 @@
     </div>
     <script src="admin.js"></script>
     <script>
-        // 소식지 목록을 표시하는 함수
         function displayNewsletters() {
             const listElement = document.getElementById('newsletterList');
-            listElement.innerHTML = ''; // 기존 목록 초기화
+            listElement.innerHTML = '';
             
             fetchNewsletters().then(newsletters => {
                 newsletters.forEach(newsletter => {
@@ -43,25 +42,19 @@
             });
         }
 
-        // 소식지 수정 함수
         function editNewsletter(id) {
             window.location.href = `admin-newsletter-edit.html?id=${id}`;
         }
 
-        // 소식지 삭제 함수
         function deleteNewsletter(id) {
             if (confirm('이 소식지를 삭제하시겠습니까?')) {
-                // admin.js에 정의된 deleteNewsletter 함수 호출
-                deleteNewsletter(id).then(() => {
-                    displayNewsletters(); // 목록 갱신
+                deleteNewsletterFromServer(id).then(() => {
+                    displayNewsletters();
                 });
             }
         }
 
-        // 페이지 로드 시 소식지 목록 표시
-        document.addEventListener('DOMContentLoaded', () => {
-            displayNewsletters();
-        });
+        document.addEventListener('DOMContentLoaded', displayNewsletters);
     </script>
 </body>
 </html>
