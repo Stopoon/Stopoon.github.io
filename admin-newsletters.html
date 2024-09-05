@@ -24,21 +24,37 @@
     </div>
     <script src="admin.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        function displayNewsletters() {
+            const listElement = document.getElementById('newsletterList');
+            listElement.innerHTML = '';
+            
             fetchNewsletters().then(newsletters => {
-                const listElement = document.getElementById('newsletterList');
                 newsletters.forEach(newsletter => {
                     const div = document.createElement('div');
                     div.className = 'newsletter-item';
                     div.innerHTML = `
-                        <span>${newsletter.year}년 ${newsletter.month}월 소식지</span>
+                        <span>${newsletter.year}년 ${newsletter.month}월 소식지: ${newsletter.title}</span>
                         <button onclick="editNewsletter(${newsletter.id})">수정</button>
                         <button onclick="deleteNewsletter(${newsletter.id})">삭제</button>
                     `;
                     listElement.appendChild(div);
                 });
             });
-        });
+        }
+
+        function editNewsletter(id) {
+            window.location.href = `admin-newsletter-edit.html?id=${id}`;
+        }
+
+        function deleteNewsletter(id) {
+            if (confirm('이 소식지를 삭제하시겠습니까?')) {
+                deleteNewsletterFromServer(id).then(() => {
+                    displayNewsletters();
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', displayNewsletters);
     </script>
 </body>
 </html>
