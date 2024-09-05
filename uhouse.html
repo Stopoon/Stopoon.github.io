@@ -3,51 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UHouse - 우리 가족 월간지</title>
+    <title>UHouse - 월간 소식지</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
-        .album { margin-bottom: 40px; }
-        .album-title { font-size: 24px; margin-bottom: 10px; }
-        .image-container { display: flex; flex-wrap: wrap; gap: 10px; }
-        .image-item { width: 200px; }
-        img { max-width: 100%; height: auto; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .thumbnail {
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .thumbnail:hover {
+            transform: translateY(-5px);
+        }
+        .thumbnail img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .thumbnail .info {
+            padding: 10px;
+            text-align: center;
+        }
+        .thumbnail h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+        @media (max-width: 768px) {
+            .thumbnail-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>UHouse - 우리 가족 월간지</h1>
-    <div id="albumsContainer"></div>
+    <h1>2024년 UHouse 월간 소식지</h1>
+    <div class="thumbnail-grid" id="thumbnailGrid">
+        <!-- Thumbnails will be dynamically inserted here -->
+    </div>
 
     <script>
-        const ALBUMS_JSON_URL = 'https://raw.githubusercontent.com/stopoon/stopoon.github.io/main/uhouse_albums.json';
+        const newsletters = [
+            { month: 8, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
+            { month: 7, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
+            { month: 6, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
+            { month: 5, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
+            { month: 4, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
+            { month: 3, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
+        ];
 
-        async function loadAlbums() {
-            try {
-                const response = await fetch(ALBUMS_JSON_URL);
-                const albums = await response.json();
-                const container = document.getElementById('albumsContainer');
-
-                albums.forEach(album => {
-                    const albumDiv = document.createElement('div');
-                    albumDiv.className = 'album';
-                    albumDiv.innerHTML = `
-                        <h2 class="album-title">${album.title}</h2>
-                        <div class="image-container">
-                            ${album.images.map(img => `
-                                <div class="image-item">
-                                    <img src="${img}" alt="소식지 이미지">
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                    container.appendChild(albumDiv);
-                });
-            } catch (error) {
-                console.error('앨범 로딩 실패:', error);
-                alert('앨범을 불러오는데 실패했습니다.');
-            }
+        function createThumbnail(newsletter) {
+            return `
+                <div class="thumbnail" onclick="openNewsletter(${newsletter.year}, ${newsletter.month})">
+                    <img src="${newsletter.thumbnail}" alt="${newsletter.year}년 ${newsletter.month}월 소식지">
+                    <div class="info">
+                        <h3>${newsletter.year}년 ${newsletter.month}월 소식지</h3>
+                    </div>
+                </div>
+            `;
         }
 
-        window.onload = loadAlbums;
+        function displayNewsletters() {
+            const grid = document.getElementById('thumbnailGrid');
+            newsletters.forEach(newsletter => {
+                grid.innerHTML += createThumbnail(newsletter);
+            });
+        }
+
+        function openNewsletter(year, month) {
+            // 여기에 소식지 뷰어 페이지로 이동하는 로직을 추가합니다.
+            window.location.href = `newsletter-viewer.html?year=${year}&month=${month}`;
+        }
+
+        displayNewsletters();
     </script>
 </body>
 </html>
