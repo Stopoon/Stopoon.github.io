@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UHouse - 잡지 뷰어</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .viewer {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page-image {
+            max-width: 100%;
+            max-height: 80vh;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="viewer">
+        <img id="pageImage" src="page1.jpg" alt="잡지 페이지" class="page-image">
+    </div>
+    <div class="controls">
+        <button onclick="changePage(-1)">이전</button>
+        <button onclick="location.href='uhouse.html'">홈으로</button>
+        <button onclick="changePage(1)">다음</button>
+    </div>
+    <script>
+        let currentPage = 1;
+        const totalPages = 10; // 총 페이지 수
+
+        function changePage(direction) {
+            currentPage += direction;
+            if (currentPage < 1) currentPage = totalPages;
+            if (currentPage > totalPages) currentPage = 1;
+            document.getElementById('pageImage').src = `page${currentPage}.jpg`;
+        }
+    </script>
+</body>
+</html>
