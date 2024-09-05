@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소식지 편집</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .page-list {
+            margin-top: 20px;
+        }
+        .page-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>소식지 편집</h1>
+        <form id="newsletterForm">
+            <label for="year">년도:</label>
+            <select id="year" required>
+                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+            </select>
+
+            <label for="month">월:</label>
+            <select id="month" required>
+                <option value="1">1월</option>
+                <option value="2">2월</option>
+                <!-- ... 다른 월 옵션들 ... -->
+                <option value="12">12월</option>
+            </select>
+
+            <label for="thumbnail">썸네일 이미지 URL:</label>
+            <input type="url" id="thumbnail" required>
+
+            <h2>페이지</h2>
+            <div id="pageList"></div>
+
+            <button type="button" onclick="addPage()">새 페이지 추가</button>
+            <button type="submit">저장</button>
+        </form>
+    </div
