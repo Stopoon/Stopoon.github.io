@@ -58,40 +58,36 @@
         <!-- Thumbnails will be dynamically inserted here -->
     </div>
 
-    <script>
-        const newsletters = [
-            { month: 8, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
-            { month: 7, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
-            { month: 6, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
-            { month: 5, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
-            { month: 4, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
-            { month: 3, year: 2024, thumbnail: 'https://via.placeholder.com/300x400' },
-        ];
+<script>
+    fetch('newsletters.json')
+        .then(response => response.json())
+        .then(data => {
+            const newsletters = data.newsletters;
+            displayNewsletters();
+        })
+        .catch(error => console.error('Error:', error));
 
-        function createThumbnail(newsletter) {
-            return `
-                <div class="thumbnail" onclick="openNewsletter(${newsletter.year}, ${newsletter.month})">
-                    <img src="${newsletter.thumbnail}" alt="${newsletter.year}년 ${newsletter.month}월 소식지">
-                    <div class="info">
-                        <h3>${newsletter.year}년 ${newsletter.month}월 소식지</h3>
-                    </div>
+    function createThumbnail(newsletter) {
+        return `
+            <div class="thumbnail" onclick="openNewsletter(${newsletter.year}, ${newsletter.month})">
+                <img src="${newsletter.thumbnail}" alt="${newsletter.year}년 ${newsletter.month}월 소식지">
+                <div class="info">
+                    <h3>${newsletter.year}년 ${newsletter.month}월 소식지</h3>
                 </div>
-            `;
-        }
+            </div>
+        `;
+    }
 
-        function displayNewsletters() {
-            const grid = document.getElementById('thumbnailGrid');
-            newsletters.forEach(newsletter => {
-                grid.innerHTML += createThumbnail(newsletter);
-            });
-        }
+    function displayNewsletters() {
+        const grid = document.getElementById('thumbnailGrid');
+        newsletters.forEach(newsletter => {
+            grid.innerHTML += createThumbnail(newsletter);
+        });
+    }
 
-        function openNewsletter(year, month) {
-            // 여기에 소식지 뷰어 페이지로 이동하는 로직을 추가합니다.
-            window.location.href = `newsletter-viewer.html?year=${year}&month=${month}`;
-        }
-
-        displayNewsletters();
-    </script>
+    function openNewsletter(year, month) {
+        window.location.href = `newsletter-viewer.html?year=${year}&month=${month}`;
+    }
+</script>
 </body>
 </html>
