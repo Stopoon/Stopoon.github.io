@@ -8,12 +8,15 @@
         .viewer { text-align: center; }
         .page-image { max-width: 100%; height: auto; }
         .controls { margin-top: 20px; }
+        #debug { margin-top: 20px; color: red; }
     </style>
 </head>
 <body>
     <div class="viewer">
         <img id="pageImage" class="page-image" src="" alt="소식지 페이지">
     </div>
+
+    <div id="debug"></div>
 
     <div class="controls">
         <button onclick="changePage('prev')">이전</button>
@@ -22,17 +25,40 @@
     </div>
 
     <script>
+        const monthImages = {
+            '202408': ['IMG_0662.jpg', 'IMG_0663.jpg', 'IMG_0664.jpg', 'IMG_0665.jpg', 'IMG_0666.jpg', 'IMG_0680.jpg']
+            // 다른 월의 이미지들도 여기에 추가할 수 있습니다.
+        };
+
         const urlParams = new URLSearchParams(window.location.search);
-        let currentPage = urlParams.get('page') || '202408';
+        const month = urlParams.get('month') || '202408';
+        const imageNames = monthImages[month] || [];
+        let currentIndex = 0;
+        const debugElement = document.getElementById('debug');
 
         function updateImage() {
-            document.getElementById('pageImage').src = './' + currentPage + '.jpg';
+            if (imageNames.length === 0) {
+                debugElement.textContent = '해당 월의 이미지가 없습니다.';
+                return;
+            }
+            const imagePath = './' + imageNames[currentIndex];
+            document.getElementById('pageImage').src = imagePath;
+            debugElement.textContent = '로드 중인 이미지 경로: ' + imagePath;
+
+            document.getElementById('pageImage').onload = function() {
+                debugElement.textContent += ' (로드 성공)';
+            };
+            document.getElementById('pageImage').onerror = function() {
+                debugElement.textContent += ' (로드 실패)';
+            };
         }
 
         function changePage(direction) {
-            // 여기에 페이지 변경 로직을 구현하세요
-            // 예: if (direction === 'next') currentPage = '202409';
-            // 현재는 구현되어 있지 않으므로 작동하지 않습니다.
+            if (direction === 'next') {
+                currentIndex = (currentIndex + 1) % imageNames.length;
+            } else if (direction === 'prev') {
+                currentIndex = (currentIndex - 1 + imageNames.length) % imageNames.length;
+            }
             updateImage();
         }
 
