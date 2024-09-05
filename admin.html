@@ -41,17 +41,28 @@
     <script>
         const REPO_OWNER = 'stopoon';
         const REPO_NAME = 'stopoon.github.io';
-        let GITHUB_TOKEN = '';
+        let GITHUB_TOKEN = localStorage.getItem('github_token');
 
-        function checkPassword() {
-            const password = prompt("관리자 비밀번호를 입력하세요:");
-            if (password === "0113") {
+        function checkAccess() {
+            if (GITHUB_TOKEN) {
                 document.getElementById('adminContent').style.display = 'block';
-                GITHUB_TOKEN = prompt("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:");
                 updateImageSelect();
             } else {
-                alert("비밀번호가 올바르지 않습니다.");
-                location.href = 'uhouse.html';
+                const password = prompt("관리자 비밀번호를 입력하세요:");
+                if (password === "0113") {
+                    GITHUB_TOKEN = prompt("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:");
+                    if (GITHUB_TOKEN) {
+                        localStorage.setItem('github_token', GITHUB_TOKEN);
+                        document.getElementById('adminContent').style.display = 'block';
+                        updateImageSelect();
+                    } else {
+                        alert("GitHub 토큰이 필요합니다.");
+                        location.href = 'uhouse.html';
+                    }
+                } else {
+                    alert("비밀번호가 올바르지 않습니다.");
+                    location.href = 'uhouse.html';
+                }
             }
         }
 
@@ -77,7 +88,33 @@
             }
         }
 
-        // readFileAsBase64, uploadToGitHub 함수는 이전과 동일
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function uploadToGitHub(filename, content) {
+            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/images/${filename}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: `Upload ${filename}`,
+                    content: content,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.statusText}`);
+            }
+        }
 
         async function updateImageSelect() {
             const select = document.getElementById('imageSelect');
@@ -148,7 +185,7 @@
             }
         }
 
-        window.onload = checkPassword;
+        window.onload = checkAccess;
     </script>
 </body>
 </html>
