@@ -1,7 +1,7 @@
 // 로그인 함수
 function login(username, password) {
     // 실제 구현에서는 서버에 요청을 보내 인증을 수행해야 합니다.
-    if (username === 'admin' && password === 'password') {
+    if (username === 'admin' && password === '1234') {
         localStorage.setItem('isLoggedIn', 'true');
         window.location.href = 'admin-dashboard.html';
     } else {
