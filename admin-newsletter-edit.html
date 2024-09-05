@@ -3,58 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소식지 관리</title>
+    <title>소식지 편집</title>
     <link rel="stylesheet" href="admin-styles.css">
 </head>
 <body>
     <nav class="nav">
         <ul>
             <li><a href="admin-dashboard.html">대시보드</a></li>
-            <li><a href="admin-newsletters.html" class="active">소식지 관리</a></li>
+            <li><a href="admin-newsletters.html">소식지 관리</a></li>
             <li><a href="admin-settings.html">설정</a></li>
             <li><a href="#" onclick="logout()">로그아웃</a></li>
         </ul>
     </nav>
     <div class="container">
-        <h1>소식지 관리</h1>
-        <button onclick="location.href='admin-newsletter-edit.html'" class="btn btn-primary">새 소식지 만들기</button>
-        <div id="newsletterList" class="newsletter-list">
-            <!-- 소식지 목록이 여기에 동적으로 추가됩니다 -->
-        </div>
+        <h1 id="pageTitle">새 소식지 만들기</h1>
+        <form id="newsletterForm">
+            <input type="hidden" id="newsletterId">
+            <div class="form-group">
+                <label for="title">제목:</label>
+                <input type="text" id="title" required>
+            </div>
+            <div class="form-group">
+                <label for="year">년도:</label>
+                <input type="number" id="year" required min="2000" max="2099">
+            </div>
+            <div class="form-group">
+                <label for="month">월:</label>
+                <input type="number" id="month" required min="1" max="12">
+            </div>
+            <div class="form-group">
+                <label for="imageUrl">구글 사진 링크:</label>
+                <input type="url" id="imageUrl" required>
+            </div>
+            <button type="submit" class="btn btn-primary">저장</button>
+            <button type="button" onclick="location.href='admin-newsletters.html'" class="btn btn-secondary">취소</button>
+        </form>
     </div>
     <script src="admin.js"></script>
     <script>
-        function displayNewsletters() {
-            const listElement = document.getElementById('newsletterList');
-            listElement.innerHTML = '';
-            
-            fetchNewsletters().then(newsletters => {
-                newsletters.forEach(newsletter => {
-                    const div = document.createElement('div');
-                    div.className = 'newsletter-item';
-                    div.innerHTML = `
-                        <span>${newsletter.year}년 ${newsletter.month}월 소식지: ${newsletter.title}</span>
-                        <button onclick="editNewsletter(${newsletter.id})">수정</button>
-                        <button onclick="deleteNewsletter(${newsletter.id})">삭제</button>
-                    `;
-                    listElement.appendChild(div);
-                });
-            });
-        }
+        const form = document.getElementById('newsletterForm');
+        const titleElement = document.getElementById('pageTitle');
+        const idInput = document.getElementById('newsletterId');
 
-        function editNewsletter(id) {
-            window.location.href = `admin-newsletter-edit.html?id=${id}`;
-        }
-
-        function deleteNewsletter(id) {
-            if (confirm('이 소식지를 삭제하시겠습니까?')) {
-                deleteNewsletterFromServer(id).then(() => {
-                    displayNewsletters();
+        function loadNewsletter() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            if (id) {
+                titleElement.textContent = '소식지 수정';
+                fetchNewsletter(id).then(newsletter => {
+                    idInput.value = newsletter.id;
+                    document.getElementById('title').value = newsletter.title;
+                    document.getElementById('year').value = newsletter.year;
+                    document.getElementById('month').value = newsletter.month;
+                    document.getElementById('imageUrl').value = newsletter.imageUrl;
                 });
             }
         }
 
-        document.addEventListener('DOMContentLoaded', displayNewsletters);
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newsletter = {
+                id: idInput.value,
+                title: document.getElementById('title').value,
+                year: document.getElementById('year').value,
+                month: document.getElementById('month').value,
+                imageUrl: document.getElementById('imageUrl').value
+            };
+
+            saveNewsletter(newsletter).then(() => {
+                window.location.href = 'admin-newsletters.html';
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', loadNewsletter);
     </script>
 </body>
 </html>
