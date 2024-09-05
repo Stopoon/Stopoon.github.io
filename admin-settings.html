@@ -36,10 +36,6 @@
             </div>
             <button type="submit" class="btn btn-primary">비밀번호 변경</button>
         </form>
-        <hr>
-        <h2>비밀번호 재설정</h2>
-        <p>비밀번호를 잊어버리셨나요? 아래 버튼을 클릭하여 비밀번호 재설정 이메일을 받으세요.</p>
-        <button onclick="sendPasswordResetEmail()" class="btn btn-secondary">비밀번호 재설정 이메일 보내기</button>
     </div>
     <script src="admin.js"></script>
     <script>
@@ -62,28 +58,6 @@
                 form.adminUsername.value = settings.username;
             });
         });
-
-        function sendPasswordResetEmail() {
-            fetch('/api/reset-password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: 'ktstopoon@gmail.com' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('비밀번호 재설정 이메일이 ktstopoon@gmail.com으로 발송되었습니다.');
-                } else {
-                    alert('비밀번호 재설정 이메일 발송에 실패했습니다. 나중에 다시 시도해주세요.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('오류가 발생했습니다. 나중에 다시 시도해주세요.');
-            });
-        }
     </script>
 </body>
 </html>
