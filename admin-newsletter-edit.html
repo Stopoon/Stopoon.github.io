@@ -3,117 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소식지 편집</title>
+    <title>소식지 관리</title>
     <link rel="stylesheet" href="admin-styles.css">
-    <style>
-        .valid-link::after {
-            content: '✅';
-            color: green;
-            margin-left: 5px;
-        }
-    </style>
 </head>
 <body>
     <nav class="nav">
         <ul>
             <li><a href="admin-dashboard.html">대시보드</a></li>
-            <li><a href="admin-newsletters.html">소식지 관리</a></li>
+            <li><a href="admin-newsletters.html" class="active">소식지 관리</a></li>
             <li><a href="admin-settings.html">설정</a></li>
             <li><a href="#" onclick="logout()">로그아웃</a></li>
         </ul>
     </nav>
     <div class="container">
-        <h1>소식지 편집</h1>
-        <form id="newsletterForm">
-            <div class="form-group">
-                <label for="year">년도:</label>
-                <input type="number" id="year" name="year" required>
-            </div>
-            <div class="form-group">
-                <label for="month">월:</label>
-                <input type="number" id="month" name="month" min="1" max="12" required>
-            </div>
-            <div class="form-group">
-                <label for="title">제목:</label>
-                <input type="text" id="title" name="title" required>
-            </div>
-            <div id="imageLinks">
-                <h3>사진 링크 (최대 10개)</h3>
-            </div>
-            <button type="button" onclick="addImageLink()" class="btn btn-secondary">사진 링크 추가</button>
-            <button type="submit" class="btn btn-primary">저장</button>
-        </form>
+        <h1>소식지 관리</h1>
+        <button onclick="location.href='admin-newsletter-edit.html'" class="btn btn-primary">새 소식지 만들기</button>
+        <div id="newsletterList" class="newsletter-list">
+            <!-- 소식지 목록이 여기에 동적으로 추가됩니다 -->
+        </div>
     </div>
     <script src="admin.js"></script>
     <script>
-        let linkCount = 0;
-
-        function addImageLink() {
-            if (linkCount >= 10) {
-                alert('최대 10개의 사진 링크만 추가할 수 있습니다.');
-                return;
-            }
-            const container = document.getElementById('imageLinks');
-            const div = document.createElement('div');
-            div.className = 'form-group';
-            div.innerHTML = `
-                <label for="imageLink${linkCount}">사진 링크 ${linkCount + 1}:</label>
-                <input type="url" id="imageLink${linkCount}" name="imageLink${linkCount}" onblur="validateImageLink(this)">
-            `;
-            container.appendChild(div);
-            linkCount++;
-        }
-
-        function validateImageLink(input) {
-            const url = input.value;
-            fetch(url)
-                .then(response => {
-                    if (response.ok && response.headers.get('content-type').startsWith('image/')) {
-                        input.classList.add('valid-link');
-                    } else {
-                        input.classList.remove('valid-link');
-                    }
-                })
-                .catch(() => input.classList.remove('valid-link'));
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('newsletterForm');
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-                const newsletter = {
-                    year: formData.get('year'),
-                    month: formData.get('month'),
-                    title: formData.get('title'),
-                    imageLinks: []
-                };
-                for (let i = 0; i < linkCount; i++) {
-                    const link = formData.get(`imageLink${i}`);
-                    if (link) {
-                        newsletter.imageLinks.push(link);
-                    }
-                }
-                saveNewsletter(newsletter);
+        // 소식지 목록을 표시하는 함수
+        function displayNewsletters() {
+            const listElement = document.getElementById('newsletterList');
+            listElement.innerHTML = ''; // 기존 목록 초기화
+            
+            fetchNewsletters().then(newsletters => {
+                newsletters.forEach(newsletter => {
+                    const div = document.createElement('div');
+                    div.className = 'newsletter-item';
+                    div.innerHTML = `
+                        <span>${newsletter.year}년 ${newsletter.month}월 소식지: ${newsletter.title}</span>
+                        <button onclick="editNewsletter(${newsletter.id})">수정</button>
+                        <button onclick="deleteNewsletter(${newsletter.id})">삭제</button>
+                    `;
+                    listElement.appendChild(div);
+                });
             });
+        }
 
-            addImageLink(); // 첫 번째 이미지 링크 입력란 추가
+        // 소식지 수정 함수
+        function editNewsletter(id) {
+            window.location.href = `admin-newsletter-edit.html?id=${id}`;
+        }
 
-            // URL 파라미터에서 소식지 ID를 가져와 기존 소식지 데이터 로드
-            const urlParams = new URLSearchParams(window.location.search);
-            const newsletterId = urlParams.get('id');
-            if (newsletterId) {
-                loadNewsletter(newsletterId).then(data => {
-                    form.year.value = data.year;
-                    form.month.value = data.month;
-                    form.title.value = data.title;
-                    data.imageLinks.forEach((link, index) => {
-                        if (index > 0) addImageLink();
-                        document.getElementById(`imageLink${index}`).value = link;
-                        validateImageLink(document.getElementById(`imageLink${index}`));
-                    });
+        // 소식지 삭제 함수
+        function deleteNewsletter(id) {
+            if (confirm('이 소식지를 삭제하시겠습니까?')) {
+                // admin.js에 정의된 deleteNewsletter 함수 호출
+                deleteNewsletter(id).then(() => {
+                    displayNewsletters(); // 목록 갱신
                 });
             }
+        }
+
+        // 페이지 로드 시 소식지 목록 표시
+        document.addEventListener('DOMContentLoaded', () => {
+            displayNewsletters();
         });
     </script>
 </body>
