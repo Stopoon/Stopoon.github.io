@@ -25,13 +25,35 @@
 <body>
     <h1>UHouse 월간 소식지</h1>
     
-    <div id="thumbnailGrid" class="thumbnail-grid">
-        <div class="thumbnail">
-            <a href="viewer.html?month=202408">
-                <img src="./202408thumb.jpg" alt="8월 소식">
-                <p>8월 소식: 2024년 8월호</p>
-            </a>
-        </div>
-    </div>
+    <div id="thumbnailGrid" class="thumbnail-grid"></div>
+
+    <script>
+        const newsletters = [
+            { month: '202408', title: '8월 소식: 2024년 8월호' },
+            { month: '202407', title: '7월 소식: 2024년 7월호' }
+        ];
+
+        const thumbnailGrid = document.getElementById('thumbnailGrid');
+
+        newsletters.forEach(newsletter => {
+            const thumbnailDiv = document.createElement('div');
+            thumbnailDiv.className = 'thumbnail';
+
+            const link = document.createElement('a');
+            link.href = `viewer.html?month=${newsletter.month}`;
+
+            const img = document.createElement('img');
+            img.src = `./${newsletter.month}thumb.jpg`;
+            img.alt = newsletter.title;
+
+            const p = document.createElement('p');
+            p.textContent = newsletter.title;
+
+            link.appendChild(img);
+            link.appendChild(p);
+            thumbnailDiv.appendChild(link);
+            thumbnailGrid.appendChild(thumbnailDiv);
+        });
+    </script>
 </body>
 </html>
