@@ -9,24 +9,33 @@
 <body>
     <div class="container">
         <h1>관리자 로그인</h1>
-        <form id="loginForm">
+        <form id="loginForm" onsubmit="return login()">
             <div class="form-group">
                 <label for="username">사용자명:</label>
-                <input type="text" id="username" name="username" value="stopoon" readonly>
+                <input type="text" id="username" name="username" required>
             </div>
             <div class="form-group">
                 <label for="password">비밀번호:</label>
-                <input type="password" id="password" name="password" value="626813" readonly>
+                <input type="password" id="password" name="password" required>
             </div>
-            <button type="button" onclick="login()" class="btn btn-primary">로그인</button>
+            <button type="submit" class="btn btn-primary">로그인</button>
         </form>
     </div>
     <script>
         function login() {
-            // 로그인 상태를 localStorage에 저장
-            localStorage.setItem('isLoggedIn', 'true');
-            // 대시보드 페이지로 이동
-            window.location.href = 'admin-dashboard.html';
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'stopoon' && password === '626813') {
+                // 로그인 성공
+                localStorage.setItem('isLoggedIn', 'true');
+                window.location.href = 'admin-dashboard.html';
+                return false; // 폼 제출 방지
+            } else {
+                // 로그인 실패
+                alert('아이디 또는 비밀번호가 올바르지 않습니다.');
+                return false; // 폼 제출 방지
+            }
         }
     </script>
 </body>
