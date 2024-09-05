@@ -5,19 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UHouse - 관리자 페이지</title>
     <style>
-        /* 이전 스타일 유지 */
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .upload-form, .cover-select {
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <!-- 이전 HTML 구조 유지 -->
+    <h1>UHouse 관리자 페이지</h1>
+    <div id="adminContent" style="display: none;">
+        <div class="upload-form">
+            <h2>이미지 업로드</h2>
+            <input type="text" id="imageTitle" placeholder="예: 2024년 8월 소식지">
+            <input type="file" id="imageUpload" accept="image/*">
+            <button onclick="uploadImage()">업로드</button>
+        </div>
+        <div class="cover-select">
+            <h2>업로드된 이미지 목록</h2>
+            <select id="imageSelect">
+                <option value="">선택하세요</option>
+            </select>
+            <button onclick="deleteImage()">삭제</button>
+        </div>
+        <button onclick="location.href='uhouse.html'">홈으로 돌아가기</button>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-base64/3.7.2/base64.min.js"></script>
     <script>
         const REPO_OWNER = 'stopoon';
         const REPO_NAME = 'stopoon.github.io';
-        let GITHUB_TOKEN = localStorage.getItem('github_token');
+        const GITHUB_TOKEN = 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; // 여기에 실제 토큰을 입력하세요
         const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
 
-        // checkAccess 함수는 이전과 동일
+        function checkAccess() {
+            const password = prompt("관리자 비밀번호를 입력하세요:");
+            if (password === "0113") {
+                document.getElementById('adminContent').style.display = 'block';
+                updateImageSelect();
+            } else {
+                alert("비밀번호가 올바르지 않습니다.");
+                location.href = 'uhouse.html';
+            }
+        }
 
         async function uploadImage() {
             const title = document.getElementById('imageTitle').value;
@@ -41,7 +77,14 @@
             }
         }
 
-        // readFileAsBase64 함수는 이전과 동일
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
 
         async function uploadToGitHub(filename, content) {
             const url = `${CORS_PROXY}https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/images/${filename}`;
@@ -101,7 +144,57 @@
             }
         }
 
-        // deleteImage 및 deleteFromGitHub 함수도 비슷하게 수정
+        async function deleteImage() {
+            const select = document.getElementById('imageSelect');
+            const filename = select.value;
+            if (!filename) {
+                alert('삭제할 이미지를 선택해주세요.');
+                return;
+            }
+
+            if (confirm(`${filename}을 삭제하시겠습니까?`)) {
+                try {
+                    await deleteFromGitHub(filename);
+                    alert(`${filename} 삭제 성공!`);
+                    updateImageSelect();
+                } catch (error) {
+                    console.error('Delete failed:', error);
+                    alert(`삭제 실패: ${error.message}`);
+                }
+            }
+        }
+
+        async function deleteFromGitHub(filename) {
+            const url = `${CORS_PROXY}https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/images/${filename}`;
+            try {
+                const fileInfo = await fetch(url, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                }).then(res => res.json());
+
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({
+                        message: `Delete ${filename}`,
+                        sha: fileInfo.sha,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                throw error;
+            }
+        }
 
         window.onload = checkAccess;
     </script>
