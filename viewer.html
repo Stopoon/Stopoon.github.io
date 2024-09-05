@@ -1,34 +1,66 @@
 <!DOCTYPE html>
 <html lang="ko">
-<!-- 기존 head 부분은 그대로 유지 -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UHouse 소식지 뷰어</title>
+    <style>
+        .viewer { text-align: center; }
+        .page-image { max-width: 100%; height: auto; }
+        .controls { margin-top: 20px; }
+        #debug { margin-top: 20px; color: red; }
+    </style>
+</head>
 <body>
-    <!-- 기존 body 내용 유지 -->
+    <div class="viewer">
+        <img id="pageImage" class="page-image" src="" alt="소식지 페이지">
+    </div>
+
+    <div id="debug"></div>
+
+    <div class="controls">
+        <button onclick="changePage('prev')">이전</button>
+        <button onclick="location.href='uhouse.html'">홈으로</button>
+        <button onclick="changePage('next')">다음</button>
+    </div>
+
     <script>
-        // 기존 스크립트 내용을 유지하고 updateImage 함수를 다음과 같이 수정합니다.
+        const monthImages = {
+            '202408': ['IMG_0662.jpg', 'IMG_0663.jpg', 'IMG_0664.jpg', 'IMG_0665.jpg', 'IMG_0666.jpg', 'IMG_0680.jpg'],
+            '202407': ['202407_1.jpg', '202407_2.jpg', '202407_3.jpg', '202407_4.jpg', '202407_5.jpg', '202407_6.jpg', '202407_7.jpg']
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const month = urlParams.get('month') || '202408';
+        const imageNames = monthImages[month] || [];
+        let currentIndex = 0;
+        const debugElement = document.getElementById('debug');
+
         function updateImage() {
             if (imageNames.length === 0) {
                 debugElement.textContent = '해당 월의 이미지가 없습니다.';
-                console.error('이미지 목록이 비어 있습니다.');
                 return;
             }
             const imagePath = './' + imageNames[currentIndex];
-            console.log('이미지 로드 시도:', imagePath);
             document.getElementById('pageImage').src = imagePath;
             debugElement.textContent = '로드 중인 이미지 경로: ' + imagePath;
 
             document.getElementById('pageImage').onload = function() {
                 debugElement.textContent += ' (로드 성공)';
-                console.log('이미지 로드 성공:', imagePath);
             };
-            document.getElementById('pageImage').onerror = function(e) {
+            document.getElementById('pageImage').onerror = function() {
                 debugElement.textContent += ' (로드 실패)';
-                console.error('이미지 로드 실패:', imagePath, e);
             };
         }
 
-        // 페이지 로드 시 현재 월 정보 로깅
-        console.log('현재 선택된 월:', month);
-        console.log('해당 월의 이미지 목록:', imageNames);
+        function changePage(direction) {
+            if (direction === 'next') {
+                currentIndex = (currentIndex + 1) % imageNames.length;
+            } else if (direction === 'prev') {
+                currentIndex = (currentIndex - 1 + imageNames.length) % imageNames.length;
+            }
+            updateImage();
+        }
 
         updateImage();
     </script>
