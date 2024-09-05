@@ -38,14 +38,16 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-base64/3.7.2/base64.min.js"></script>
     <script>
-        const GITHUB_TOKEN = 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;
         const REPO_OWNER = 'stopoon';
         const REPO_NAME = 'stopoon.github.io';
+        let GITHUB_TOKEN = '';
 
         function checkPassword() {
             const password = prompt("관리자 비밀번호를 입력하세요:");
             if (password === "0113") {
                 document.getElementById('adminContent').style.display = 'block';
+                GITHUB_TOKEN = prompt("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:");
+                updateCoverSelect();
             } else {
                 alert("비밀번호가 올바르지 않습니다.");
                 location.href = 'uhouse.html';
@@ -145,6 +147,7 @@
         async function updateConfig(coverImage) {
             const configUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/config.json`;
             let config = { coverImage };
+            let existingConfig;
 
             try {
                 const response = await fetch(configUrl, {
@@ -154,7 +157,7 @@
                 });
 
                 if (response.ok) {
-                    const existingConfig = await response.json();
+                    existingConfig = await response.json();
                     config = JSON.parse(Base64.decode(existingConfig.content));
                     config.coverImage = coverImage;
                 }
