@@ -36,7 +36,12 @@
         </div>
         <button onclick="location.href='uhouse.html'">홈으로 돌아가기</button>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-base64/3.7.2/base64.min.js"></script>
     <script>
+        const GITHUB_TOKEN = 'YOUR_GITHUB_TOKEN';
+        const REPO_OWNER = 'stopoon';
+        const REPO_NAME = 'stopoon.github.io';
+
         function checkPassword() {
             const password = prompt("관리자 비밀번호를 입력하세요:");
             if (password === "0113") {
@@ -47,39 +52,134 @@
             }
         }
 
-        function uploadImages() {
+        async function uploadImages() {
             const input = document.getElementById('imageUpload');
-            if (input.files.length > 10) {
+            const files = input.files;
+
+            if (files.length > 10) {
                 alert('최대 10개의 이미지만 업로드할 수 있습니다.');
                 return;
             }
-            // 여기에 실제 업로드 로직을 구현해야 합니다.
-            alert('이미지 업로드 기능이 구현되어야 합니다.');
+
+            for (let file of files) {
+                try {
+                    const content = await readFileAsBase64(file);
+                    await uploadToGitHub(file.name, content);
+                    alert(`${file.name} 업로드 성공!`);
+                } catch (error) {
+                    console.error('Upload failed:', error);
+                    alert(`${file.name} 업로드 실패: ${error.message}`);
+                }
+            }
+
             updateCoverSelect();
         }
 
-        function updateCoverSelect() {
-            const select = document.getElementById('coverSelect');
-            // 이 부분은 실제 업로드된 이미지 목록을 반영하도록 수정해야 합니다.
-            for (let i = 1; i <= 10; i++) {
-                const option = document.createElement('option');
-                option.value = `page${i}.jpg`;
-                option.textContent = `이미지 ${i}`;
-                select.appendChild(option);
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function uploadToGitHub(filename, content) {
+            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/images/${filename}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: `Upload ${filename}`,
+                    content: content,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.statusText}`);
             }
         }
 
-        function selectCover() {
+        async function updateCoverSelect() {
+            const select = document.getElementById('coverSelect');
+            select.innerHTML = '<option value="">선택하세요</option>';
+
+            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/images`;
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                },
+            });
+
+            if (response.ok) {
+                const files = await response.json();
+                files.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file.name;
+                    option.textContent = file.name;
+                    select.appendChild(option);
+                });
+            } else {
+                console.error('Failed to fetch image list');
+            }
+        }
+
+        async function selectCover() {
             const select = document.getElementById('coverSelect');
             if (select.value) {
-                // 여기에 실제로 대표 이미지를 설정하는 로직을 구현해야 합니다.
-                alert(`${select.value}를 대표 이미지로 설정했습니다.`);
+                try {
+                    await updateConfig(select.value);
+                    alert(`${select.value}를 대표 이미지로 설정했습니다.`);
+                } catch (error) {
+                    console.error('Failed to set cover image:', error);
+                    alert('대표 이미지 설정에 실패했습니다.');
+                }
             } else {
                 alert('이미지를 선택해주세요.');
             }
         }
 
-        // 페이지 로드 시 비밀번호 확인
+        async function updateConfig(coverImage) {
+            const configUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/config.json`;
+            let config = { coverImage };
+
+            try {
+                const response = await fetch(configUrl, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const existingConfig = await response.json();
+                    config = JSON.parse(Base64.decode(existingConfig.content));
+                    config.coverImage = coverImage;
+                }
+            } catch (error) {
+                console.error('Failed to fetch existing config:', error);
+            }
+
+            const updateResponse = await fetch(configUrl, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message: 'Update cover image',
+                    content: Base64.encode(JSON.stringify(config)),
+                    sha: existingConfig?.sha,
+                }),
+            });
+
+            if (!updateResponse.ok) {
+                throw new Error(`GitHub API error: ${updateResponse.statusText}`);
+            }
+        }
+
         window.onload = checkPassword;
     </script>
 </body>
