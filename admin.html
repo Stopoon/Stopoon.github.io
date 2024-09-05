@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UHouse - 관리자 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .upload-form, .cover-select {
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>UHouse 관리자 페이지</h1>
+    <div id="adminContent" style="display: none;">
+        <div class="upload-form">
+            <h2>이미지 업로드</h2>
+            <input type="file" id="imageUpload" accept="image/*" multiple>
+            <button onclick="uploadImages()">업로드</button>
+        </div>
+        <div class="cover-select">
+            <h2>대표 이미지 선택</h2>
+            <select id="coverSelect">
+                <option value="">선택하세요</option>
+            </select>
+            <button onclick="selectCover()">선택</button>
+        </div>
+        <button onclick="location.href='uhouse.html'">홈으로 돌아가기</button>
+    </div>
+    <script>
+        function checkPassword() {
+            const password = prompt("관리자 비밀번호를 입력하세요:");
+            if (password === "0113") {
+                document.getElementById('adminContent').style.display = 'block';
+            } else {
+                alert("비밀번호가 올바르지 않습니다.");
+                location.href = 'uhouse.html';
+            }
+        }
+
+        function uploadImages() {
+            const input = document.getElementById('imageUpload');
+            if (input.files.length > 10) {
+                alert('최대 10개의 이미지만 업로드할 수 있습니다.');
+                return;
+            }
+            // 여기에 실제 업로드 로직을 구현해야 합니다.
+            alert('이미지 업로드 기능이 구현되어야 합니다.');
+            updateCoverSelect();
+        }
+
+        function updateCoverSelect() {
+            const select = document.getElementById('coverSelect');
+            // 이 부분은 실제 업로드된 이미지 목록을 반영하도록 수정해야 합니다.
+            for (let i = 1; i <= 10; i++) {
+                const option = document.createElement('option');
+                option.value = `page${i}.jpg`;
+                option.textContent = `이미지 ${i}`;
+                select.appendChild(option);
+            }
+        }
+
+        function selectCover() {
+            const select = document.getElementById('coverSelect');
+            if (select.value) {
+                // 여기에 실제로 대표 이미지를 설정하는 로직을 구현해야 합니다.
+                alert(`${select.value}를 대표 이미지로 설정했습니다.`);
+            } else {
+                alert('이미지를 선택해주세요.');
+            }
+        }
+
+        // 페이지 로드 시 비밀번호 확인
+        window.onload = checkPassword;
+    </script>
+</body>
+</html>
