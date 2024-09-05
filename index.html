@@ -11,8 +11,8 @@
     <div class="main-content">
         <div class="welcome">Stopoon 개인 공간에 방문해 주셔서 감사합니다.</div>
         <div class="icons">
-            <i class="fas fa-hammer icon" onclick="alert('준비 중입니다.')"></i>
-            <i id="logo" class="fas fa-home icon" onclick="handleLogoClick()"></i>
+            <i class="fas fa-hammer icon" onclick="goToAdminLogin()"></i>
+            <i class="fas fa-home icon" onclick="showPasswordModal()"></i>
             <i class="fas fa-briefcase icon" onclick="alert('준비 중입니다.')"></i>
         </div>
     </div>
@@ -21,23 +21,8 @@
         // 기존 스크립트 내용 유지
 
         // 새로운 함수 추가
-        let logoClickCount = 0;
-        let lastClickTime = 0;
-
-        function handleLogoClick() {
-            const currentTime = new Date().getTime();
-            if (currentTime - lastClickTime > 1000) { // 1초 이내의 클릭만 카운트
-                logoClickCount = 1;
-            } else {
-                logoClickCount++;
-            }
-            lastClickTime = currentTime;
-
-            if (logoClickCount === 3) {
-                window.location.href = 'admin-login.html'; // 관리자 로그인 페이지로 이동
-            } else {
-                showPasswordModal(); // 기존 기능 유지
-            }
+        function goToAdminLogin() {
+            window.location.href = 'admin-login.html';
         }
 
         // 기존 스크립트 내용 유지
