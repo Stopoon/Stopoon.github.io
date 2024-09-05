@@ -3,36 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UHouse 월간 소식지</title>
+    <title>UHouse 소식지 뷰어</title>
     <style>
-        .thumbnail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        .thumbnail {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
-        .thumbnail img {
-            max-width: 100%;
-            height: auto;
-        }
+        .viewer { text-align: center; }
+        .page-image { max-width: 100%; height: auto; }
+        .controls { margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h1>UHouse 월간 소식지</h1>
-    
-    <div id="thumbnailGrid" class="thumbnail-grid">
-        <div class="thumbnail">
-            <a href="viewer.html?page=202408">
-                <img src="202408thumb.JPG" alt="8월 소식">
-                <p>8월 소식: 여름 특집</p>
-            </a>
-        </div>
-        <!-- 다른 월 소식도 비슷한 형식으로 추가할 수 있습니다 -->
+    <div class="viewer">
+        <img id="pageImage" class="page-image" src="" alt="소식지 페이지">
     </div>
+
+    <div class="controls">
+        <button onclick="changePage('prev')">이전</button>
+        <button onclick="location.href='uhouse.html'">홈으로</button>
+        <button onclick="changePage('next')">다음</button>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentPage = urlParams.get('page') || '202408';
+
+        function updateImage() {
+            document.getElementById('pageImage').src = currentPage + '.jpg';
+        }
+
+        function changePage(direction) {
+            // 여기에 페이지 변경 로직을 구현하세요
+            // 예: if (direction === 'next') currentPage = '202409';
+            // 현재는 구현되어 있지 않으므로 작동하지 않습니다.
+            updateImage();
+        }
+
+        updateImage();
+    </script>
 </body>
 </html>
