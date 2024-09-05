@@ -7,17 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
     <style>
         /* 이전 스타일 코드는 그대로 유지 */
-        .message-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -28,25 +17,23 @@
     <div class="welcome">Stopoon 개인 공간에 방문해 주셔서 감사합니다.</div>
     <div class="icons">
         <i class="fas fa-hammer icon" onclick="showMessage()"></i>
-        <i class="fas fa-home icon" onclick="showPasswordModal()"></i>
+        <i class="fas fa-home icon" onclick="checkUHousePassword()"></i>
         <i class="fas fa-briefcase icon" onclick="showMessage()"></i>
     </div>
-    <div id="passwordModal">
-        <!-- 이전 비밀번호 모달 코드는 그대로 유지 -->
-    </div>
     <div id="messageBox" class="message-box">
-        <p>😅 아직 작업중입니다.</p>
+        <p>😅 어색하게 웃는 이모티콘으로 아직 작업중입니다.</p>
         <button onclick="hideMessage()">닫기</button>
     </div>
     <script>
         // 이전 JavaScript 코드는 그대로 유지
 
-        function showMessage() {
-            document.getElementById('messageBox').style.display = 'block';
-        }
-
-        function hideMessage() {
-            document.getElementById('messageBox').style.display = 'none';
+        function checkUHousePassword() {
+            const password = prompt("비밀번호를 입력하세요:");
+            if (password === "01073000747") {
+                window.location.href = 'uhouse.html';
+            } else {
+                alert('비밀번호가 틀렸습니다.');
+            }
         }
 
         // 나머지 이전 JavaScript 코드는 그대로 유지
