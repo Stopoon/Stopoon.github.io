@@ -83,19 +83,35 @@
             justify-content: center;
             margin-top: 20px;
         }
+        .password-group {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
         .password-input input {
             width: 30px;
             height: 30px;
-            margin: 5px;
+            margin: 0 5px;
             text-align: center;
             font-size: 20px;
         }
         #message {
             display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: #f8f9fa;
-            padding: 10px;
-            margin-top: 10px;
+            padding: 20px;
             border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        #messageCloseBtn {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -129,7 +145,10 @@
             </div>
         </div>
 
-        <div id="message"></div>
+        <div id="message">
+            <span id="messageCloseBtn">&times;</span>
+            <p id="messageContent"></p>
+        </div>
     </div>
 
     <div id="passwordModal">
@@ -146,32 +165,49 @@
 
         function showMessage(type) {
             const messageElement = document.getElementById('message');
-            messageElement.textContent = `${type} 준비중입니다.`;
+            document.getElementById('messageContent').textContent = `${type} 준비중입니다.`;
             messageElement.style.display = 'block';
-            messageElement.onclick = () => messageElement.style.display = 'none';
         }
+
+        document.getElementById('messageCloseBtn').onclick = function() {
+            document.getElementById('message').style.display = 'none';
+        };
 
         function showPasswordPrompt(page) {
             currentPage = page;
             const container = document.getElementById('passwordInputContainer');
             container.innerHTML = '';
             const inputCount = page === 'uhouse' ? 11 : 4;
-            for (let i = 0; i < inputCount; i++) {
-                const input = document.createElement('input');
-                input.type = 'tel';
-                input.maxLength = 1;
-                input.pattern = '[0-9]*';
-                container.appendChild(input);
-            }
+            const groupSizes = page === 'uhouse' ? [3, 4, 4] : [4];
+            
+            groupSizes.forEach(size => {
+                const group = document.createElement('div');
+                group.className = 'password-group';
+                for (let i = 0; i < size; i++) {
+                    const input = document.createElement('input');
+                    input.type = 'tel';
+                    input.maxLength = 1;
+                    input.pattern = '[0-9]*';
+                    group.appendChild(input);
+                }
+                container.appendChild(group);
+            });
+            
             document.getElementById('passwordModal').style.display = 'block';
-            container.firstChild.focus();
+            container.querySelector('input').focus();
         }
 
         document.getElementById('passwordInputContainer').addEventListener('input', function(e) {
             if (e.target.tagName === 'INPUT') {
                 if (e.target.value.length === 1) {
-                    const next = e.target.nextElementSibling;
-                    if (next) next.focus();
+                    const inputs = document.querySelectorAll('#passwordInputContainer input');
+                    const index = Array.from(inputs).indexOf(e.target);
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                    if (index === inputs.length - 1) {
+                        checkPassword();
+                    }
                 }
             }
         });
@@ -190,10 +226,6 @@
             }
             document.getElementById('passwordModal').style.display = 'none';
         }
-
-        document.getElementById('passwordInputContainer').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') checkPassword();
-        });
 
         window.onclick = function(event) {
             if (event.target == document.getElementById('passwordModal')) {
