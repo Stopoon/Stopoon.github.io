@@ -30,11 +30,12 @@
         .welcome {
             font-size: 24px;
             margin-bottom: 20px;
+            white-space: nowrap; /* 한 줄로 표시 */
         }
         .icons {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 40px; /* 아이콘 간격 증가 */
         }
         .icon-wrapper {
             display: flex;
@@ -125,6 +126,13 @@
                 <input type="password" maxlength="1" />
                 <input type="password" maxlength="1" />
                 <input type="password" maxlength="1" />
+                <input type="password" maxlength="1" />
+                <input type="password" maxlength="1" />
+                <input type="password" maxlength="1" />
+                <input type="password" maxlength="1" />
+                <input type="password" maxlength="1" />
+                <input type="password" maxlength="1" />
+                <input type="password" maxlength="1" />
             </div>
         </div>
     </div>
@@ -157,7 +165,7 @@
 
         function checkPassword() {
             const password = Array.from(passwordInputs).map(input => input.value).join('');
-            if (currentPage === 'uhouse' && password === '1004') {
+            if (currentPage === 'uhouse' && password === '01073000747') {
                 window.location.href = 'uhouse.html';
             } else if (currentPage === 'yuha' && password === '0601') {
                 window.location.href = 'yuha.html';
