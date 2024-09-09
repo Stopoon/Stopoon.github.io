@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사랑하는 지나에게</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap');
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #FFD1DC;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .envelope {
+            width: 300px;
+            height: 200px;
+            background-color: #FFF5EE;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: #FFF5EE;
+            transform-origin: bottom;
+            transition: transform 1s;
+        }
+
+        .letter {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            background-color: #FFFFFF;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 1s;
+            overflow-y: auto;
+        }
+
+        .letter-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #FFB6C1;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FF69B4;
+        }
+
+        .love-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            font-family: 'Gamja Flower', cursive;
+            font-size: 72px;
+            color: #FF69B4;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        @media (max-width: 768px) {
+            .envelope {
+                width: 250px;
+                height: 166px;
+            }
+
+            .letter-content {
+                font-size: 14px;
+            }
+
+            .love-message {
+                font-size: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="envelope">
+            <div class="envelope-flap"></div>
+        </div>
+        <div class="letter">
+            <div class="letter-content"></div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button onclick="replayAnimation()">다시보기</button>
+        <button onclick="hideLetterOuter()">넣기</button>
+    </div>
+    <div class="love-message">사랑해</div>
+
+    <script>
+        const letterContent = `사랑하는 나의 아내 이지나에게
+
+9월 12일은 우리가 결혼한 지 딱 9년째 되는 날이야.
+수많은 추억을 함께 쌓았지만, 돌이켜보면 모두 눈부시게 아름답고 행복한 순간들로만 기억돼.
+
+천호동 뒷골목에서 불안한 미래를 걱정하던 내가 이렇게 따뜻하고 안락한 보금자리에서 편안하게 살아가고 있는 것은 모두 지나 덕분이야. 네가 내 곁에 있어 주어 감사해.
+
+내가 건강하고 바른 방향으로 삶을 꾸려갈 수 있는 밑바탕을 만들어주신 분이 부모님이라면, 그 토대 위에 더욱 풍성한 열매를 맺고 향기로운 꽃을 피울 수 있게 해준 건 바로 너야. 지나, 넌 내 인생의 봄이자 햇살이야.
+
+아직도 우리의 첫 만남이 눈에 선해. 진흥아파트 앞에서 주차를 하고 기다리던 내게 다가오던, 햇살처럼 밝고 따스한 미소를 지닌 네 모습. 앞으로도 그 웃음과 미소 잃지 않도록 내가 더 열심히 살게. 네 미소는 내 삶의 원동력이야.
+
+늘 자신보다 가족을 먼저 생각하며 헌신하고 애써주는 너에게 진심으로 고마워. 네 사랑과 희생이 우리 가정을 이렇게 행복하게 만들었어. 앞으로 남은 우리의 긴 인생길을 더욱 알차고 아름답게 만들어가자. 매 순간 네 곁에서 함께 걸으며, 우리의 사랑을 더욱 깊고 단단하게 키워나가고 싶어.
+
+영원히 사랑하는 마음으로~
+
+2024년9월12일
+남편 지훈으로부터`;
+
+        const envelope = document.querySelector('.envelope');
+        const envelopeFlap = document.querySelector('.envelope-flap');
+        const letter = document.querySelector('.letter');
+        const letterContent = document.querySelector('.letter-content');
+        const buttons = document.querySelector('.buttons');
+        const loveMessage = document.querySelector('.love-message');
+
+        function startAnimation() {
+            setTimeout(() => {
+                envelope.style.transform = 'translateY(-100px)';
+            }, 1000);
+
+            setTimeout(() => {
+                envelopeFlap.style.transform = 'rotateX(180deg)';
+            }, 2000);
+
+            setTimeout(() => {
+                letter.style.opacity = '1';
+                envelope.style.opacity = '0';
+                envelopeFlap.style.opacity = '0';
+                typeLetterContent();
+            }, 3000);
+        }
+
+        function typeLetterContent() {
+            let i = 0;
+            const typingSpeed = 50; // Adjust for faster or slower typing
+
+            function typeWriter() {
+                if (i < letterContent.length) {
+                    letterContent.innerHTML += letterContent.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, typingSpeed);
+                } else {
+                    buttons.style.display = 'block';
+                }
+            }
+
+            typeWriter();
+        }
+
+        function hideLetterOuter() {
+            letter.style.opacity = '0';
+            envelope.style.opacity = '1';
+            envelopeFlap.style.opacity = '1';
+            buttons.style.display = 'none';
+
+            setTimeout(() => {
+                envelope.style.transform = 'translateY(100vh)';
+            }, 1000);
+
+            setTimeout(() => {
+                loveMessage.style.opacity = '1';
+            }, 2000);
+        }
+
+        function replayAnimation() {
+            letter.style.opacity = '0';
+            envelope.style.opacity = '1';
+            envelopeFlap.style.opacity = '1';
+            loveMessage.style.opacity = '0';
+            buttons.style.display = 'none';
+            letterContent.innerHTML = '';
+            envelope.style.transform = 'none';
+            envelopeFlap.style.transform = 'none';
+
+            setTimeout(startAnimation, 1000);
+        }
+
+        window.onload = startAnimation;
+    </script>
+</body>
+</html>
