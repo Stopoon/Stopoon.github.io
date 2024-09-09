@@ -29,20 +29,23 @@
             max-width: 300px;
             height: 53vw;
             max-height: 200px;
-            background-color: #FFF5EE;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1s;
         }
 
+        .envelope svg {
+            width: 100%;
+            height: 100%;
+        }
+
         .envelope-flap {
             position: absolute;
-            top: -50%;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 50%;
-            background-color: #FFF5EE;
-            transform-origin: bottom;
+            height: 100%;
+            transform-origin: top;
             transition: transform 1s;
         }
 
@@ -94,14 +97,21 @@
         .love-message {
             position: fixed;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-90deg);
+            right: 10%;
+            transform: translateY(-50%);
             font-family: 'Gamja Flower', cursive;
             font-size: 48px;
             color: #FF69B4;
             opacity: 0;
             transition: opacity 1s;
-            white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .love-message span {
+            display: block;
+            line-height: 1.2;
         }
 
         @media (min-width: 768px) {
@@ -127,7 +137,16 @@
 <body>
     <div class="container">
         <div class="envelope">
-            <div class="envelope-flap"></div>
+            <svg viewBox="0 0 100 66" preserveAspectRatio="xMidYMid meet">
+                <path d="M0,0 L100,0 L100,66 L0,66 Z" fill="#F0E0D0" />
+                <path d="M0,0 L50,33 L100,0 Z" fill="#E0D0C0" />
+                <path d="M0,66 L50,33 L100,66 Z" fill="#D0C0B0" stroke="#C0B0A0" stroke-width="0.5" />
+            </svg>
+            <div class="envelope-flap">
+                <svg viewBox="0 0 100 66" preserveAspectRatio="xMidYMid meet">
+                    <path d="M0,0 L50,33 L100,0 L50,66 Z" fill="#E0D0C0" stroke="#C0B0A0" stroke-width="0.5" />
+                </svg>
+            </div>
         </div>
         <div class="letter">
             <div class="letter-content"></div>
@@ -137,7 +156,11 @@
         <button onclick="replayAnimation()">다시보기</button>
         <button onclick="hideLetterOuter()">넣기</button>
     </div>
-    <div class="love-message">사랑해</div>
+    <div class="love-message">
+        <span>사</span>
+        <span>랑</span>
+        <span>해</span>
+    </div>
 
     <script>
         const letterContentText = `사랑하는 나의 아내 이지나에게
