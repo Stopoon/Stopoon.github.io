@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StopooN's Personal Space</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,24 +23,22 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 20px;
+            padding: 0 20px;
         }
         .welcome {
-            font-size: 18px;
-            margin-bottom: 40px;
-            max-width: 85%;
-            white-space: nowrap;
+            font-size: 24px;
+            margin-bottom: 20px;
+            max-width: 100%;
             word-wrap: break-word;
         }
         .icons {
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 40px;
-            margin-top: -20px;
+            gap: 20px;
         }
         .icon-wrapper {
             display: flex;
@@ -120,6 +118,7 @@
 <body>
     <div class="header">
         <span id="date"></span>
+        방문자: <span id="todayVisitors">0</span>/<span id="totalVisitors">0</span>
     </div>
 
     <div class="main-content">
@@ -144,6 +143,10 @@
                 <i class="fas fa-female icon" onclick="showPasswordPrompt('yuha')"></i>
                 <span class="icon-label">유하</span>
             </div>
+            <div class="icon-wrapper">
+                <i class="fas fa-crown icon" onclick="showPasswordPrompt('jina')"></i>
+                <span class="icon-label">지나</span>
+            </div>
         </div>
 
         <div id="message">
@@ -160,23 +163,13 @@
     </div>
 
     <script>
-        function getCurrentDateWithDayOfWeek() {
-            const days = ['일', '월', '화', '수', '목', '금', '토'];
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const date = String(now.getDate()).padStart(2, '0');
-            const dayOfWeek = days[now.getDay()];
-            return `${year}.${month}.${date} (${dayOfWeek})`;
-        }
-
-        document.getElementById('date').textContent = getCurrentDateWithDayOfWeek();
+        document.getElementById('date').textContent = new Date().toLocaleDateString();
 
         let currentPage = '';
 
         function showMessage(type) {
             const messageElement = document.getElementById('message');
-            document.getElementById('messageContent').textContent = `${type} 페이지는 아직 작업하고 있어요. ^^;`;
+            document.getElementById('messageContent').textContent = `${type} 준비중입니다.`;
             messageElement.style.display = 'block';
         }
 
@@ -230,6 +223,8 @@
                 window.location.href = 'uhouse.html';
             } else if (currentPage === 'yuha' && password === '0601') {
                 window.location.href = 'yuha.html';
+            } else if (currentPage === 'jina' && password === '0113') {
+                window.location.href = 'jina.html';
             } else {
                 alert('비밀번호가 올바르지 않습니다.');
                 inputs.forEach(input => input.value = '');
